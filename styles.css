@@ -1,0 +1,292 @@
+/* ==========================================================
+   DIGITAL BLACKBOARD STYLES
+   ==========================================================
+   This file contains the page styling that used to live in
+   the HTML document. Sections are labeled to make updates
+   easier to find.
+   ========================================================== */
+
+/* ---------------------------
+   1. Global page base
+   --------------------------- */
+body {
+  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+  overflow: hidden;
+  background: rgb(45, 45, 45);
+}
+
+/* ---------------------------
+   2. Chalkboard canvas
+   --------------------------- */
+.chalkboard {
+  position: relative;
+  width: 100%;
+  height: calc(100 * min(var(--vh, 1vh), 1vh));
+  background: linear-gradient(180deg, #2d2d2d 0%, #2b2b2b 100%);
+  box-sizing: border-box;
+  border: 18px solid transparent;
+  border-image: linear-gradient(145deg, #8b633a 0%, #5b3a1c 30%, #b79060 50%, #5b3a1c 75%, #8b633a 100%) 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.04),
+    inset 0 0 22px rgba(0,0,0,0.55),
+    0 10px 24px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.chalkboard::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.chalkboard > * {
+  position: relative;
+  z-index: 2;
+}
+
+.chalkboard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80px 40px at 15% 25%, rgba(255,255,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 120px 30px at 70% 15%, rgba(255,255,255,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 60px 60px at 45% 70%, rgba(255,255,255,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 100px 20px at 80% 60%, rgba(255,255,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40px 80px at 25% 85%, rgba(255,255,255,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 150px 15px at 55% 40%, rgba(255,255,255,0.04) 0%, transparent 80%),
+    radial-gradient(ellipse 30px 100px at 90% 30%, rgba(255,255,255,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------------------------
+   3. Sticky notes
+   --------------------------- */
+.sticky-note {
+  position: absolute;
+  width: 260px;
+  min-width: 220px;
+  min-height: 180px;
+  height: 220px;
+  padding: 12px;
+  border-radius: 4px;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.4);
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: auto;
+}
+
+.sticky-note .note-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-top: 26px;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: text;
+  user-select: text;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+.sticky-note .note-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+
+.sticky-note.pinned {
+  cursor: default;
+}
+
+.sticky-note.dragging {
+  cursor: grabbing;
+  opacity: 0.85;
+  z-index: 1000;
+}
+
+/* ---------------------------
+   4. Note controls and tools
+   --------------------------- */
+.note-actions {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.note-format-tools {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.note-icon-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #555;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.note-icon-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.note-icon-btn.active {
+  background: #1f2937;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35), 0 4px 8px rgba(0, 0, 0, 0.18);
+}
+
+.pin-btn.active {
+  color: #c0392b;
+}
+
+.delete-btn {
+  font-size: 12px;
+  background: rgba(254, 226, 226, 0.92);
+  color: #b91c1c;
+}
+
+.delete-btn:hover {
+  background: rgba(252, 165, 165, 0.98);
+  color: #991b1b;
+}
+
+.note-color-picker {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  width: 88px;
+  padding: 5px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+
+.note-color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  padding: 0;
+}
+
+.note-color-picker.hidden {
+  display: none;
+}
+
+.note-font-size-menu,
+.note-list-menu {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 96px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(6px);
+  z-index: 5;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107, 114, 128, 0.65) rgba(245, 245, 245, 0.85);
+}
+
+.note-font-size-menu::-webkit-scrollbar,
+.note-list-menu::-webkit-scrollbar,
+.note-color-picker::-webkit-scrollbar,
+.note-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.note-font-size-menu::-webkit-scrollbar-thumb,
+.note-list-menu::-webkit-scrollbar-thumb,
+.note-color-picker::-webkit-scrollbar-thumb,
+.note-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(107, 114, 128, 0.75), rgba(55, 65, 81, 0.9));
+  border-radius: 999px;
+}
+
+.note-font-size-menu.hidden,
+.note-list-menu.hidden {
+  display: none;
+}
+
+.note-font-size-option {
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: inherit;
+  line-height: 1.35;
+}
+
+.note-font-size-option:hover {
+  background: #f3f4f6;
+}
+
+/* ---------------------------
+   5. Top bar and color picker
+   --------------------------- */
+.top-bar,
+.top-bar-shell {
+  overflow: visible;
+}
+
+.color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.color-option:hover {
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
